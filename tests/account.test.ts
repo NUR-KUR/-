@@ -1,0 +1,54 @@
+import {strict as assert} from 'node:assert';
+import {readFileSync} from 'node:fs';
+import {Miniflare} from 'miniflare';
+import {handleAPI} from '../lib/api';
+const mf=new Miniflare({modules:true,script:'export default {fetch(){return new Response("test")}}',d1Databases:['DB'],compatibilityDate:'2026-05-15'});
+const db=await mf.getD1Database('DB');
+const sql=readFileSync(new URL('../drizzle/0000_dusty_kat_farrell.sql',import.meta.url),'utf8');
+for(const statement of sql.split('--> statement-breakpoint').filter(s=>s.trim()))await db.prepare(statement).run();
+const origin='https://ultima.test';
+let checks=0;
+async function call(path:string,method='GET',body?:any,user:string|null='alice',expected=200,source=origin){
+ const response=await handleAPI(new Request(origin+'/api/'+path,{method,headers:{'Origin':source,'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)}),db as any,user?{userId:user}:null);
+ const result=await response.json() as any;assert.equal(response.status,expected,JSON.stringify({path,method,result}));checks++;return result;
+}
+try{
+ await call('me','GET',undefined,null,401);
+ const initial=await call('me');assert.equal(initial.stats.visits,0);assert.match(initial.member.code,/^U-[A-Z0-9]{12}$/);
+ const first=await call('visits','POST',{salon:'buro-trekhgornaya',date:'2026-11-01',status:'completed',services:['styling']},'alice',201);
+ const second=await call('visits','POST',{salon:'kynsi-patriarshie',date:'2026-11-02',status:'completed',services:['manicure']},'alice',201);
+ await call('visits','POST',{salon:'buro-trekhgornaya',date:'2026-11-01',status:'completed',services:['styling']},'alice',409);
+ await call('visits','POST',{salon:'buro-trekhgornaya',date:'2099-01-01',status:'completed',services:['styling']},'alice',400);
+ await call('visits','POST',{salon:'buro-trekhgornaya',date:'2026-02-30',status:'completed',services:['styling']},'alice',400);
+ await call('visits','POST',{salon:'buro-trekhgornaya',date:'2026-11-05',status:'completed',services:['unknown']},'alice',400);
+ await call('visits/'+first.id,'DELETE',undefined,'bob',404);
+ await call('visits/'+first.id,'PATCH',{status:'cancelled'},'bob',404);
+ await call('reviews/'+first.id,'POST',{rating:1},'bob',404);
+ await call('reviews/'+first.id,'POST',{rating:6},'alice',400);
+ await call('reviews/'+first.id,'POST',{rating:5,body:'Тестовый отзыв <script>ничего</script>'});
+ await call('reviews/'+first.id,'POST',{rating:4,body:'Обновлено'});
+ let ratings=await call('ratings','GET',undefined,null);assert.equal(ratings.ratings[0].average,4);assert.equal(ratings.ratings[0].count,1);
+ const me=await call('me');assert.deepEqual(me.stats,{visits:2,salons:2,reviews:1,planned:0});
+ const bob=await call('me','GET',undefined,'bob');assert.equal(bob.visits.length,0);assert.notEqual(me.member.code,bob.member.code);
+ await call('me','PATCH',{nickname:'Проверка'});
+ const pub=await call('reviews?salon=buro-trekhgornaya','GET',undefined,null);assert.equal(pub.reviews[0].author,'Проверка');assert.equal(pub.reviews[0].body,'Обновлено');assert.equal('user_id' in pub.reviews[0],false);
+ const plan=await call('visits','POST',{salon:'kynsi-patriarshie',date:'2099-01-01',time:'12:00',services:['manicure'],status:'planned'},'alice',201);
+ await call('reviews/'+plan.id,'POST',{rating:5},'alice',409);
+ await call('visits/'+plan.id,'PATCH',{status:'completed'},'alice',400);
+ await call('visits/'+plan.id,'PATCH',{status:'cancelled'});
+ await call('visits/'+plan.id,'PATCH',{status:'completed'},'alice',409);
+ await call('favorites/buro-trekhgornaya','POST',{});
+ await call('favorites/buro-trekhgornaya','POST',{});
+ assert.equal((await call('me')).favorites.length,1);
+ assert.equal((await call('me','GET',undefined,'bob')).favorites.length,0);
+ await call('favorites/buro-trekhgornaya','DELETE',undefined,'bob');
+ assert.equal((await call('me')).favorites.length,1);
+ await call('me','PATCH',{nickname:'Cross site'},'alice',403,'https://evil.test');
+ await call('me','PATCH',{nickname:'x'.repeat(41)},'alice',400);
+ await call('visits/'+first.id,'DELETE');
+ ratings=await call('ratings','GET',undefined,null);assert.equal(ratings.ratings.length,0);assert.equal((await call('me')).stats.visits,1);
+ await call('me','DELETE');
+ assert.equal((await db.prepare('SELECT COUNT(*) AS n FROM visits WHERE user_id=?').bind('alice').first() as any).n,0);
+ assert.equal((await db.prepare('SELECT COUNT(*) AS n FROM favorites WHERE user_id=?').bind('alice').first() as any).n,0);
+ console.log(`PASS: ${checks} real D1 API checks — accounts, isolation, validation, visit counters, reviews, favorites, deletion, CSRF.`);
+}finally{await mf.dispose();}

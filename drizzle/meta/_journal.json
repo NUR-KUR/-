@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1794701031360,
+      "tag": "0000_dusty_kat_farrell",
+      "breakpoints": true
+    }
+  ]
+}

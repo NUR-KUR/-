@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
+  <meta name="theme-color" content="#0c0d0f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Ultima">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/assets/app-icon-192.png">
+  <title>ULTIMA — каталог салонов Москвы</title>
+  <meta name="description" content="Салоны Москвы и единая программа Ultima. Личный профиль, история посещений, оценки клиентов и избранное.">
+  <meta property="og:title" content="ULTIMA — каталог салонов Москвы">
+  <link rel="canonical" href="https://ultima-beauty-guide.nur-kur.chatgpt.site/">
+  <meta property="og:url" content="https://ultima-beauty-guide.nur-kur.chatgpt.site/">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://ultima-beauty-guide.nur-kur.chatgpt.site/assets/buro.webp">
+  <meta property="og:description" content="Салоны, услуги, комплексы. Москва и загородные локации.">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/fonts.css"><link rel="stylesheet" href="/style.css?v=2"><link rel="stylesheet" href="/ios.css?v=4">
+  <script defer src="/data.js"></script><script defer src="/app.js?v=6"></script>
+<link rel="stylesheet" href="/dark.css?v=5"><link rel="stylesheet" href="/mobile.css?v=1">
+</head>
+<body>
+<a class="skip" href="#collection">Перейти к каталогу</a>
+<header class="header"><div class="header-inner">
+<a class="brand" href="#collection" data-nav="catalog" aria-label="Ultima — каталог"><span class="brand-icon" aria-hidden="true">U</span>ULTIMA</a>
+<nav aria-label="Главная навигация"><a class="active" href="#collection" data-nav="catalog">Салоны</a><a href="#rituals" data-nav="rituals">Комплексы</a><a href="#standard" data-nav="standard">О сервисе</a></nav>
+<div class="header-actions"><button id="favorites-button" aria-label="Открыть избранные салоны"><span data-icon="heart"></span><span class="action-label">Избранное</span><span class="counter" id="favorite-count">0</span></button><button data-action="open-plans" data-nav="plans" aria-label="Мои визиты"><span data-icon="calendar"></span><span class="action-label">Визиты</span><span class="counter" id="plan-count">0</span></button><button class="profile-button" data-action="open-account" aria-label="Мой профиль"><span data-icon="user"></span><span id="account-label">Войти</span></button></div>
+<button class="mobile-account" data-action="open-account" aria-label="Мой профиль"><span data-icon="user"></span></button>
+</div></header>
+<main>
+<section class="collection wrap section" id="collection"><div class="membership-strip" id="membership-strip"></div><div class="section-head"><div class="title-group"><div class="section-kicker">Москва и Подмосковье</div><h1>Салоны<span class="title-city"> Москвы</span></h1><p>22 адреса · 10 брендов</p></div><button class="text-link" id="concierge-button"><span data-icon="sliders"></span>Подобрать</button></div>
+  <div class="catalog-search"><label class="search-input"><span data-icon="search"></span><input id="search" type="search" placeholder="Салон, услуга или адрес" aria-label="Поиск салона" enterkeyhint="search" autocomplete="off"><button type="button" class="search-clear" id="search-clear" aria-label="Очистить поиск" hidden><span data-icon="close"></span></button></label><button class="mobile-filter-button" id="mobile-filters" type="button" aria-label="Открыть фильтры" aria-haspopup="dialog" aria-expanded="false"><span data-icon="sliders"></span><span class="filter-badge" id="mobile-filter-count" hidden>0</span></button><label class="select-wrap"><span class="label">РАЙОН</span><select id="district" aria-label="Выбрать район"><option value="all">Все районы</option></select></label><label class="select-wrap"><span class="label">СОРТИРОВКА</span><select id="sort" aria-label="Сортировать салоны"><option value="editorial">По списку</option><option value="name">По названию</option><option value="priced">Сначала с прайсом</option><option value="rating">По оценкам клиентов</option></select></label></div>
+  <div class="category-row" id="categories" aria-label="Категории услуг"></div>
+  <div class="catalog-meta"><span id="result-count" role="status"></span><button class="text-button favorites-filter" id="favorites-filter"><span data-icon="heart"></span>Только избранное</button></div>
+  <div id="active-filters" class="active-filters"></div>
+  <div class="salon-grid" id="salon-grid"></div>
+  <div class="load-row"><button class="button outline" id="load-more">Показать ещё <span data-icon="plus"></span></button><p id="catalog-note">Стартовый реестр. Статус проверки указан в карточке. Запись — на сайте салона.</p></div>
+
+</section>
+<section class="rituals section" id="rituals"><div class="wrap"><div class="section-head"><h2>Комплексы<span class="heading-index">4—6 РУК</span></h2><p>Состав и одновременное выполнение<br>подтверждает салон.</p></div><div class="ritual-list">
+<button class="ritual-card" data-ritual="nails"><span class="complex-icon" data-icon="sparkle"></span><h3>Маникюр + педикюр</h3><span class="hands">4 руки</span><span class="row-arrow" data-icon="chevron"></span></button>
+<button class="ritual-card" data-ritual="full"><span class="complex-icon" data-icon="layers"></span><h3>Укладка + маникюр + педикюр</h3><span class="hands">6 рук</span><span class="row-arrow" data-icon="chevron"></span></button>
+<button class="ritual-card" data-ritual="event"><span class="complex-icon" data-icon="eye"></span><h3>Укладка + макияж</h3><span class="hands">4 руки</span><span class="row-arrow" data-icon="chevron"></span></button>
+</div><p class="section-note">В плане визита доступны пожелания о приватном кабинете и Silent Service.</p></div></section>
+<section class="standard wrap section" id="standard"><div class="standard-title"><span class="eyebrow">Ultima Selected</span><h2>Отбор салонов</h2><button class="text-link" data-info="method">Критерии Ultima <span data-icon="arrow-up"></span></button></div><div class="criteria-list"><div><span class="row-number">01</span><h3>Квалификация</h3><p>Специализация мастеров и качество выполненных работ.</p></div><div><span class="row-number">02</span><h3>Протоколы</h3><p>Происхождение косметики и санитарные требования.</p></div><div><span class="row-number">03</span><h3>Организация</h3><p>Запись, пунктуальность и согласованный состав услуг.</p></div><p class="criteria-note">Допуск Ultima Selected присваивается после независимого аудита. Размещение в стартовом реестре не означает пройденную проверку.</p></div></section>
+<section class="faq wrap section"><h2>Условия</h2><div class="faq-list"><details><summary>Стоимость сервиса<span data-icon="plus"></span></summary><p>Поиск, подбор и планирование бесплатны. Процедуры оплачиваются непосредственно салону по согласованному прайсу.</p></details><details><summary>Запись и подтверждение<span data-icon="plus"></span></summary><p>План визита сохраняется в вашем аккаунте. Фактическую запись, время, мастеров и стоимость подтверждает салон на своём сайте. Сохранённый план не является бронью.</p></details><details><summary>Статус салонов<span data-icon="plus"></span></summary><p>Каталог содержит кандидатов на рассмотрение Ultima. Данные четырёх филиалов требуют прямого уточнения: в их карточках запись недоступна. Допуск Ultima Selected пока не присвоен ни одному адресу.</p></details><details><summary>Сохранённые данные<span data-icon="plus"></span></summary><p>После входа через ChatGPT избранное, планы и история хранятся в вашем профиле и доступны на других устройствах. Вы можете удалить их в настройках. Оценки публикуются под выбранным именем.</p></details></div></section>
+</main>
+<footer class="footer wrap"><div class="footer-main"><a href="#" class="footer-logo" aria-label="Ultima — на главную">ULTIMA</a><div><button data-info="partners">Для салонов</button><button data-info="sources">Источники</button><button data-info="privacy">Конфиденциальность</button></div></div><div class="footer-bottom"><span>© <span id="year"></span> ULTIMA</span><span>МОСКВА</span><button data-info="launch">Статус запуска <span data-icon="arrow-up"></span></button></div></footer>
+<nav class="app-tabbar" aria-label="Основные разделы">
+<a class="app-tab active" href="#collection" data-nav="catalog" aria-current="page"><span data-icon="grid"></span><span>Салоны</span></a>
+<a class="app-tab" href="#rituals" data-nav="rituals"><span data-icon="layers"></span><span>Комплексы</span></a>
+<button class="app-tab" data-nav="favorites"><span data-icon="heart"></span><span>Избранное</span></button>
+<button class="app-tab" data-nav="plans" data-action="open-plans"><span data-icon="calendar"></span><span>Визиты</span></button><button class="app-tab" data-nav="account" data-action="open-account"><span data-icon="user"></span><span>Профиль</span></button>
+</nav>
+<dialog id="main-dialog" aria-labelledby="dialog-title"><button class="close-dialog icon-button" aria-label="Закрыть окно"><span data-icon="close"></span></button><div id="dialog-content"></div></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<noscript><p class="noscript">Для поиска и карточек включите JavaScript. <a href="https://www.burobeauty.ru/">BURO.Beauty</a> · <a href="https://kynsi.ru/">KYNSI</a>.</p></noscript>
+</body></html>
